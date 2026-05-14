@@ -1,4 +1,5 @@
-const express = require("express");
+import express from "express";
+
 const coursesRouter = express.Router();
 
 coursesRouter.get("/", (req, res) => {
@@ -15,6 +16,4 @@ coursesRouter.get("/purchased", (req, res) => {
   });
 });
 
-module.exports = {
-  coursesRouter: coursesRouter,
-};
+export { coursesRouter };

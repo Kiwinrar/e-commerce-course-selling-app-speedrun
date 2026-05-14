@@ -1,5 +1,5 @@
-const express = require("express");
-const admin = require("./admin");
+import express from "express";
+
 const adminContentRouter = express.Router();
 
 
@@ -21,6 +21,4 @@ adminContentRouter.get("/", (req, res) => {
   });
 });
 
-module.exports={
-    adminContentRouter: adminContentRouter
-}
+export { adminContentRouter };

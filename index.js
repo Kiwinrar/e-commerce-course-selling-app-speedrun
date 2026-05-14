@@ -1,14 +1,28 @@
-const express = require("express");
-const app = express();
+import "dotenv/config.js";
+import express from "express";
+import mongoose from "mongoose";
+import { userRouter } from "./routes/user.js";
+import { coursesRouter as contentRouter } from "./routes/userCourses.js";
+import { adminRouter } from "./routes/admin.js";
 
-const { userRouter } = require("./routes/user");
-const { coursesRouter: contentRouter } = require("./routes/userCourses");
-const { adminRouter } = require("./routes/admin");
+const app = express();
 
 app.use("/user", userRouter);
 app.use("/admin", adminRouter);
 app.use("/courses", contentRouter);
 
-app.listen(3000, () => {
-  console.log("Listening at port 3000 for requests");
-});
+const main = async () => {
+  try {
+    const response=await mongoose.connect(process.env.CONNECTION_STRING);
+    console.log("MongoDB connected");
+    
+    app.listen(3000, () => {
+      console.log("Listening at port 3000 for requests");
+    });
+  } catch (error) {
+    console.error("MongoDB connection error:", error);
+    process.exit(1);
+  }
+};
+
+main();

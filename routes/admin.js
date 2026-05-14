@@ -1,6 +1,8 @@
-const express = require("express");
+import express from "express";
+import { adminContentRouter } from "./adminContent.js";
+import { adminModel } from "./db.js";
+
 const adminRouter = express.Router();
-const { adminContentRouter } = require("./adminContent");
 
 adminRouter.post("/signup", (req, res) => {
   //Signup
@@ -18,6 +20,5 @@ adminRouter.post("/signin", (req, res) => {
 
 adminRouter.use("/courses", adminContentRouter);
 
-module.exports = {
-  adminRouter: adminRouter,
-};
+export { adminRouter };
+
