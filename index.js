@@ -2,22 +2,11 @@ const express = require('express')
 const app = express()
 
 const userRouter=require("./user")
+const contentRouter=require("./courses")
 
 app.use('/user', userRouter)
 
-app.get('/courses', (req, res)=>{
-    //get all courses
-    res.json({
-        msg: "All courses endpoint"
-    })
-})
-
-app.get('/user/courses/purchased', (req, res)=>{
-    //get all purchased courses
-    res.json({
-        msg: "purchased courses endpoint"
-    })
-})
+app.use('/courses', contentRouter)
 
 app.listen(3000, ()=>{
     console.log("Listening at port 3000 for requests");
