@@ -7,14 +7,16 @@ const userSchema=new Schema({
     email: {type: String, unique: true},
     password: String, 
     firstName: String,
-    Lastname: String
+    lastName: String,
+    username: {type: String, unique:true},
 })
 
 const adminSchema=new Schema({
     email: {type: String, unique: true},
     password: String, 
     firstName: String,
-    Lastname: String
+    lastName: String,
+    username: {type: String, unique: true},
 })
 
 

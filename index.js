@@ -2,10 +2,11 @@ import "dotenv/config.js";
 import express from "express";
 import mongoose from "mongoose";
 import { userRouter } from "./routes/user.js";
-import { coursesRouter as contentRouter } from "./routes/userCourses.js";
+import { coursesRouter as contentRouter } from "./contents/userCourses.js";
 import { adminRouter } from "./routes/admin.js";
 
 const app = express();
+app.use(express.json());
 
 app.use("/user", userRouter);
 app.use("/admin", adminRouter);

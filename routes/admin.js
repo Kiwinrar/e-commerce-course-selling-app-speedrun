@@ -1,6 +1,6 @@
 import express from "express";
-import { adminContentRouter } from "./adminContent.js";
-import { adminModel } from "./db.js";
+import { adminContentRouter } from "../contents/adminContent.js";
+import { adminModel } from "../schema/db.js";
 
 const adminRouter = express.Router();
 
