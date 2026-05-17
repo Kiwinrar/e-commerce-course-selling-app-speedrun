@@ -3,6 +3,7 @@ import { coursesRouter } from "../contents/userCourses.js";
 import * as z from "zod";
 import bcrypt from "bcrypt";
 import { userModel } from "../schema/db.js";
+import jwt from "jsonwebtoken";
 const userRouter = express.Router();
 
 userRouter.post("/signup", async (req, res) => {
@@ -28,7 +29,13 @@ userRouter.post("/signup", async (req, res) => {
         message: "LastName is a required field",
       }),
     });
-    await validate.parseAsync({ username, email, password, firstName, lastName });
+    await validate.parseAsync({
+      username,
+      email,
+      password,
+      firstName,
+      lastName,
+    });
     const hashPassword = await bcrypt.hash(password, 10);
     const response = await userModel.create({
       firstName,
@@ -48,26 +55,57 @@ userRouter.post("/signup", async (req, res) => {
     });
   } catch (error) {
     console.log("The Error in signing up:", error);
-    if(error instanceof z.ZodError){
-      const message = error.issues.map(err => err.message);
+    if (error instanceof z.ZodError) {
+      const message = error.issues.map((err) => err.message);
       res.status(403).send({
-        message: "Error in creation of profile", 
-        errors: message
+        message: "Error in creation of profile",
+        errors: message,
       });
     } else {
       res.status(500).send({
         message: "An error occurred during signup",
-        error: error.message || "Unknown error"
+        error: error.message || "Unknown error",
       });
     }
   }
 });
 
-userRouter.post("/signin", (req, res) => {
-  //Signin
-  res.json({
-    msg: "signin endpoint",
-  });
+userRouter.post("/signin", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const response = await userModel.findOne({
+      username,
+    });
+    if (!response) {
+      res.status(403).send({
+        message: "Check the username",
+      });
+    }
+    const checkPassword = await bcrypt.compare(password, response.password);
+    console.log(checkPassword);
+    if (!checkPassword) {
+      res.status(403).send({
+        message: "Check the password again",
+      });
+    }
+    console.log("hi");
+    const token = jwt.sign(
+      {
+        userId: String(response._id),
+      },
+      process.env.JWT_SECRET,
+    );
+    console.log(token);
+    res.status(200).send({
+      message: "Signed in sucessfully authentication token generated",
+      token: token,
+    });
+  } catch (error) {
+    res.status(403).send({
+      message: "Error Signing in",
+      error: error,
+    });
+  }
 });
 
 userRouter.use("/courses", coursesRouter);
